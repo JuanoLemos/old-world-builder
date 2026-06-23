@@ -1,6 +1,6 @@
 {
   "name": "old-world-builder",
-  "version": "1.24.1",
+  "version": "1.25.0",
   "author": "Nico Thiebes",
   "homepage": "https://old-world-builder.com",
   "private": true,
@@ -43,6 +43,7 @@
     "eslint-config-react-app": "^7.0.1"
   },
   "scripts": {
+    "check-docs": "node scripts/check-docs.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
