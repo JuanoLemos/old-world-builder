@@ -29,3 +29,9 @@
 ### Calidad y testing
 - [ ] Configurar test runner
 - [ ] Escribir tests unitarios para estado Redux
+
+## Archivos relacionados
+
+- `ROADMAP.md` — Roadmap del proyecto
+- `CHANGELOG.md` — Historial de versiones
+- `AGENTS.md` — Configuración del agente y mapeo de rutas

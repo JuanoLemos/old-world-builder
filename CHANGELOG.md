@@ -1,4 +1,4 @@
-# Changelog
+# CHANGELOG — Old World Builder
 
 Todos los cambios notables en este proyecto se documentarán en este archivo.
 
@@ -13,6 +13,24 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ### Removed
 ### Fixed
 ### Security
+
+## [1.26.0] - 2026-06-27
+
+### Added
+- 3 ADRs (001: battle companion, 002: legal errata, 003: backend LLM)
+- MECANICA-ERRATA.md y erratas-log.md
+- Comandos /circuito, /consejo, /deprecados
+- Directorios doc/pendientes/, doc/news/
+- Cross-refs en 6 documentos raíz
+- INDEX.md: sistema/tracker y plantillas/meta sections
+
+### Changed
+- DILIGENCIA.md: upgrade v1.17.7 → v1.20.0
+- AGENTS.md: agregados $COMMANDS_DIR, $PEND, $NEWS + 3 comandos
+- 7 comandos stale sobrescritos del global
+- INDEX.md sincronizado con versiones y archivos faltantes
+- status-salud.md actualizado
+- scripts/check-docs.js sincronizado con template v1.20.0
 
 ## [1.25.0] - 2026-06-23
 
@@ -32,3 +50,9 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ### Added
 - Versión actual del proyecto (React 17 + Redux + Workbox PWA)
+
+## Archivos relacionados
+
+- `ROADMAP.md` — Roadmap del proyecto
+- `CHECKLIST.md` — Checklist de tareas operativas
+- `AGENTS.md` — Configuración del agente y mapeo de rutas

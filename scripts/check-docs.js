@@ -1,7 +1,7 @@
-const { readFileSync, existsSync } = require('fs');
-const { resolve } = require('path');
+import { readFileSync, existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-const ROOT = resolve(__dirname, '..');
+const ROOT = resolve(import.meta.dirname, '..');
 let warnings = 0;
 
 function warn(msg) {

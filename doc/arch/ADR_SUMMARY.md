@@ -18,6 +18,9 @@
 
 | ADR | Decisión | Estado | Fecha | Impacto |
 |---|---|---|---|---|
+| 001 | Arquitectura battle companion: nuevo dominio Redux `battle` para estado de partida, persistente en localStorage | ✅ Accepted | 2026-06-23 | src/state, src/utils |
+| 002 | Postura legal: KB de reglas desde PDFs oficiales gratuitos, sin texto literal GW, con revisión periódica de erratas | 💡 Proposed | 2026-06-23 | Reglas KB, pipeline datos |
+| 003 | Backend/proxy Node.js + Express para LLM + RAG. MVP client-side sin backend | 💡 Proposed | 2026-06-23 | backend/ nuevo |
 
 ---
 
@@ -25,9 +28,9 @@
 
 | Métrica | Valor |
 |---|---|
-| **Total ADRs** | 0 |
-| **Aceptados** | 0 |
-| **Propuestos** | 0 |
+| **Total ADRs** | 3 |
+| **Aceptados** | 1 |
+| **Propuestos** | 2 |
 | **Obsoletos** | 0 |
 
 ---

@@ -17,11 +17,15 @@ Español — todas las respuestas del agente deben ser en español. Si el agente
 | $MECANICAS | `doc/mecanicas/` | Reglas de negocio / mecánicas del proyecto |
 | $TESTING | `npm test` | Comando de test del proyecto |
 | $HARNESS | `.opencode/HARNESS.md` | Configuración de harness (test, lint, skills, stack) |
+| $COMMANDS_DIR | `.opencode/commands/` | Comandos locales del proyecto |
+| $PEND | `doc/pendientes/` | Pendientes de revisión |
 | $QA | `doc/qa/` | Situaciones a revisar (QA) |
 | $BUGS | `doc/arch/bugs.md` | Bug tracker (P1/P2/P3, severidad, estado) |
 | $INCIDENTS | `doc/arch/incidentes.md` | Incidentes runtime y crashes |
+| $NEWS | `doc/news/` | Cambios entrantes a distribuir |
 | $MAIN_APP | `src/App.js` | Archivo principal de la aplicación |
 | $CRITICAL_FILES | `src/App.js`, `src/store.js` | Archivos para backup crítico |
+| $ERRATA | `doc/mecanicas/MECANICA-ERRATA.md` | Proceso de revisión de erratas oficiales GW |
 
 ## Comandos del proyecto
 
@@ -54,10 +58,13 @@ Español — todas las respuestas del agente deben ser en español. Si el agente
 | /backupall | Backup completo |
 | /bug | Reportar bug |
 | /CBP | Commit-Build-Plan (orquestador) |
+| /circuito | Siguiente paso en el circuito |
+| /consejo | Consejo de arquitectura |
 | /checklist | Cruzar RM + Checklist |
 | /commit | Commit rápido con formato |
 | /debug | Análisis profundo de sección |
 | /deprecar | Deprecar ADR |
+| /deprecados | Comandos deprecados |
 | /diligencia-check | Verificar estructura Diligencia |
 | /doctor | Diagnóstico integral |
 | /estado | Reporte rápido del proyecto |
@@ -92,6 +99,8 @@ Español — todas las respuestas del agente deben ser en español. Si el agente
 - `ui` → Frontend: componentes, estilos, interacción React
 - `ux` → Experiencia: guías, mecánicas, diseño de interacción
 - `data` → Datasets: estructuras JSON de ejércitos, traducciones, editor de datasets
+- `battle` → Motor de batalla: tracker de partida, dados, combate, probabilidades
+- `ai` → Inteligencia artificial: backend LLM, RAG, chatbot Q&A, asesor táctico
 
 ## Disciplina BUILD
 
@@ -101,3 +110,11 @@ Al terminar cualquier BUILD en este proyecto, reportar cambios aplicados y suger
 ## Skills
 
 <!-- Agregar skills específicos del proyecto si aplican -->
+
+## Archivos relacionados
+
+- `ROADMAP.md` — Roadmap del proyecto
+- `CHECKLIST.md` — Checklist de tareas operativas
+- `CHANGELOG.md` — Historial de versiones
+- `DILIGENCIA.md` — Sello de metodología
+- `INDEX.md` — Catálogo de documentación
