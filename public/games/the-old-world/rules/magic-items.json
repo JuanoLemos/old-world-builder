@@ -1,0 +1,48 @@
+{
+  "sword-of-might": {
+    "name": { "en": "Sword of Might", "es": "Espada del poder", "fr": "Épée de puissance" },
+    "category": "weapon",
+    "points": 20,
+    "effect": {
+      "en": "Bearer gains +1 Strength. Requires two hands.",
+      "es": "El portador gana +1 a la Fuerza. Requiere dos manos."
+    }
+  },
+  "giant-blade": {
+    "name": { "en": "Giant Blade", "es": "Hoja gigante", "fr": "Lame géante" },
+    "category": "weapon",
+    "points": 40,
+    "effect": {
+      "en": "Bearer gains +3 Strength. Requires two hands.",
+      "es": "El portador gana +3 a la Fuerza. Requiere dos manos."
+    }
+  },
+  "enchanted-shield": {
+    "name": { "en": "Enchanted Shield", "es": "Escudo encantado", "fr": "Bouclier enchanté" },
+    "category": "armour",
+    "points": 20,
+    "effect": {
+      "en": "Improves the bearer's armour save by a further +1. Does not prevent using a shield.",
+      "es": "Mejora la salvación de armadura del portador en +1 adicional. No impide usar escudo."
+    }
+  },
+  "talisman-of-preservation": {
+    "name": { "en": "Talisman of Preservation", "es": "Talismán de preservación", "fr": "Talisman de préservation" },
+    "category": "talisman",
+    "points": 35,
+    "effect": {
+      "en": "Bearer gains a 4+ ward save.",
+      "es": "El portador gana una salvación especial de 4+."
+    }
+  },
+  "dispel-scroll": {
+    "name": { "en": "Dispel Scroll", "es": "Pergamino de disipación", "fr": "Parchemin de dissipation" },
+    "category": "enchanted-item",
+    "points": 25,
+    "effect": {
+      "en": "Once per battle, automatically dispel a single enemy spell. Cannot be used if the bearer is fleeing.",
+      "es": "Una vez por batalla, disipa automáticamente un hechizo enemigo. No puede usarse si el portador está huyendo."
+    },
+    "oneUse": true
+  }
+}

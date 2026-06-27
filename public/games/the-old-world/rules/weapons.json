@@ -1,0 +1,58 @@
+{
+  "hand-weapon": {
+    "name": { "en": "Hand weapon", "es": "Arma de mano", "fr": "Arme de base" },
+    "range": 0,
+    "strength": "user",
+    "specialRules": [],
+    "type": "melee"
+  },
+  "additional-hand-weapon": {
+    "name": { "en": "Additional hand weapon", "es": "Arma de mano adicional", "fr": "Arme de base additionnelle" },
+    "range": 0,
+    "strength": "user",
+    "specialRules": ["extra-attack"],
+    "type": "melee"
+  },
+  "great-weapon": {
+    "name": { "en": "Great weapon", "es": "Arma a dos manos", "fr": "Arme lourde" },
+    "range": 0,
+    "strength": "+2",
+    "specialRules": ["requires-two-hands", "strike-last"],
+    "type": "melee"
+  },
+  "halberd": {
+    "name": { "en": "Halberd", "es": "Alabarda", "fr": "Hallebarde" },
+    "range": 0,
+    "strength": "+1",
+    "specialRules": [],
+    "type": "melee"
+  },
+  "lance": {
+    "name": { "en": "Lance", "es": "Lanza de caballería", "fr": "Lance de joute" },
+    "range": 0,
+    "strength": "+2",
+    "specialRules": ["mounted-only", "charge-bonus"],
+    "type": "melee"
+  },
+  "spear": {
+    "name": { "en": "Spear", "es": "Lanza", "fr": "Lance" },
+    "range": 0,
+    "strength": "user",
+    "specialRules": ["fight-in-extra-ranks", "mounted-only-strike-last"],
+    "type": "melee"
+  },
+  "repeater-crossbow": {
+    "name": { "en": "Repeater crossbow", "es": "Ballesta de repetición", "fr": "Arbalète à répétition" },
+    "range": 24,
+    "strength": 4,
+    "specialRules": ["multiple-shots-2", "armour-piercing-1"],
+    "type": "ranged"
+  },
+  "longbow": {
+    "name": { "en": "Longbow", "es": "Arco largo", "fr": "Arc long" },
+    "range": 30,
+    "strength": 3,
+    "specialRules": ["volley-fire"],
+    "type": "ranged"
+  }
+}

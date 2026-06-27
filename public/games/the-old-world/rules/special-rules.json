@@ -1,0 +1,152 @@
+{
+  "eternal-hatred": {
+    "name": { "en": "Eternal Hatred", "es": "Odio eterno", "fr": "Haine éternelle" },
+    "category": "combat",
+    "phase": "combat",
+    "effect": {
+      "en": "May re-roll all failed hit rolls in close combat.",
+      "es": "Puede repetir todas las tiradas de impactar fallidas en combate cuerpo a cuerpo."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "hatred": {
+    "name": { "en": "Hatred", "es": "Odio", "fr": "Haine" },
+    "category": "combat",
+    "phase": "combat",
+    "effect": {
+      "en": "Re-roll failed hit rolls in the first round of close combat.",
+      "es": "Repite las tiradas de impactar fallidas en la primera ronda de combate cuerpo a cuerpo."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "murderous": {
+    "name": { "en": "Murderous", "es": "Destreza asesina", "fr": "Meurtriers" },
+    "category": "combat",
+    "phase": "combat",
+    "effect": {
+      "en": "Wound rolls of 6 in close combat inflict double the normal number of wounds.",
+      "es": "Las tiradas de herir de 6 en combate cuerpo a cuerpo infligen el doble de heridas."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "strike-first": {
+    "name": { "en": "Strike First", "es": "Siempre ataca primero", "fr": "Frappe En Premier" },
+    "category": "combat",
+    "phase": "combat",
+    "effect": {
+      "en": "The unit always attacks first in close combat, regardless of Initiative. If both sides have Strike First, normal Initiative order applies.",
+      "es": "La unidad siempre ataca primero en combate cuerpo a cuerpo, sin importar la Iniciativa. Si ambos bandos tienen Siempre Ataca Primero, se aplica la Iniciativa normal."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "frenzy": {
+    "name": { "en": "Frenzy", "es": "Frenesí", "fr": "Frénésie" },
+    "category": "combat",
+    "phase": "both",
+    "effect": {
+      "en": "+1 Attack. The unit must declare a charge if an enemy is within charge range. Cannot flee as a charge reaction.",
+      "es": "+1 Ataque. La unidad debe declarar una carga si hay un enemigo a distancia de carga. No puede huir como reacción a una carga."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "stubborn": {
+    "name": { "en": "Stubborn", "es": "Tenaz", "fr": "Tenace" },
+    "category": "morale",
+    "phase": "any",
+    "effect": {
+      "en": "The unit is considered Steadfast for break tests regardless of ranks.",
+      "es": "La unidad se considera Firme para los tests de ruptura sin importar las filas."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "fear": {
+    "name": { "en": "Fear", "es": "Miedo", "fr": "Peur" },
+    "category": "morale",
+    "phase": "combat",
+    "effect": {
+      "en": "Enemy units in close combat with a Fear-causing unit suffer −1 to their Leadership. Units that lose combat against a Fear-causing unit must take a Panic test.",
+      "es": "Las unidades enemigas en combate con una unidad que causa Miedo sufren −1 al Liderazgo. Las unidades que pierden combate contra una unidad que causa Miedo deben hacer un test de Pánico."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "terror": {
+    "name": { "en": "Terror", "es": "Terror", "fr": "Terreur" },
+    "category": "morale",
+    "phase": "any",
+    "effect": {
+      "en": "As Fear. Additionally, when declaring a charge with a Terror-causing unit, the target must pass a Leadership test or flee.",
+      "es": "Igual que Miedo. Además, al declarar una carga con una unidad que causa Terror, el objetivo debe pasar un test de Liderazgo o huir."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "immune-to-psychology": {
+    "name": { "en": "Immune to Psychology", "es": "Inmune a la psicología", "fr": "Immunisé à la psychologie" },
+    "category": "morale",
+    "phase": "any",
+    "effect": {
+      "en": "The unit is immune to Fear, Terror, Panic and other psychological effects. It never needs to take panic or break tests from psychology.",
+      "es": "La unidad es inmune a Miedo, Terror, Pánico y otros efectos psicológicos. Nunca necesita hacer tests de pánico o ruptura por psicología."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "poisoned-attacks": {
+    "name": { "en": "Poisoned Attacks", "es": "Ataques envenenados", "fr": "Attaques empoisonnées" },
+    "category": "combat",
+    "phase": "both",
+    "effect": {
+      "en": "In close combat or shooting, an unmodified hit roll of 6 automatically wounds. No to-wound roll is made for that attack.",
+      "es": "En combate cuerpo a cuerpo o disparo, una tirada de impactar de 6 sin modificar hiere automáticamente. No se hace tirada de herir para ese ataque."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "regeneration": {
+    "name": { "en": "Regeneration", "es": "Regeneración", "fr": "Régénération" },
+    "category": "defense",
+    "phase": "combat",
+    "effect": {
+      "en": "At the end of each close combat phase, roll a D6 for each wound suffered in that phase. On a 5+, the wound is restored.",
+      "es": "Al final de cada fase de combate, tira un D6 por cada herida sufrida en esa fase. Con 5+, la herida se restaura."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "flaming-attacks": {
+    "name": { "en": "Flaming Attacks", "es": "Ataques llameantes", "fr": "Attaques enflammées" },
+    "category": "combat",
+    "phase": "both",
+    "effect": {
+      "en": "Attacks are Flaming. Regeneration saves cannot be taken against wounds caused by Flaming Attacks.",
+      "es": "Los ataques son Llameantes. Las tiradas de Regeneración no pueden hacerse contra heridas causadas por Ataques Llameantes."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "armour-piercing": {
+    "name": { "en": "Armour Piercing", "es": "Perforante", "fr": "Perforant" },
+    "category": "combat",
+    "phase": "both",
+    "effect": {
+      "en": "−1 to the target's armour save rolls for attacks with this rule.",
+      "es": "−1 a las tiradas de salvación de armadura del objetivo para ataques con esta regla."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "impact-hits": {
+    "name": { "en": "Impact Hits", "es": "Impactos de carga", "fr": "Impacts" },
+    "category": "combat",
+    "phase": "charge",
+    "effect": {
+      "en": "On the turn the unit charges, it inflicts D6 automatic Strength 5 hits per full rank (max 3). These hit on a 4+ and cannot be parried.",
+      "es": "En el turno en que la unidad carga, inflige D6 impactos automáticos de Fuerza 5 por fila completa (máx 3). Impactan con 4+ y no pueden ser parados."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  },
+  "thunderstomp": {
+    "name": { "en": "Thunderstomp", "es": "Pisotón atronador", "fr": "Piétinement" },
+    "category": "combat",
+    "phase": "combat",
+    "effect": {
+      "en": "At Initiative step 0, each model with this rule inflicts D6 Strength 6 hits on the enemy unit. Models with multiple wounds suffer hits equal to their wound count instead of D6.",
+      "es": "En el paso de Iniciativa 0, cada modelo con esta regla inflige D6 impactos de Fuerza 6 en la unidad enemiga. Los modelos con varias heridas sufren impactos igual a su contador de heridas en vez de D6."
+    },
+    "source": "Forces of Fantasy (GW, free PDF)"
+  }
+}

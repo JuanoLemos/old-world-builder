@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -26,6 +26,15 @@ import { getStats, getUnitName } from "../../utils/unit";
 import { editUnit } from "../../state/lists";
 import { updateSetting } from "../../state/settings";
 import { getGameSystems } from "../../utils/game-systems";
+import {
+  createBattle,
+  addUnitToBattle,
+  updateBattleUnit,
+  updateVictoryPoints,
+  advancePhase,
+  selectActiveBattle,
+  selectOpponentUnits,
+} from "../../state/battle";
 
 import "./GameView.css";
 
@@ -44,15 +53,24 @@ export const GameView = () => {
     showCustomNotes,
     showGeneratedSpells,
   } = settings;
-  const [banners, setBanners] = useState(0);
-  const [scenarioPoints, setScenarioPoints] = useState(0);
-  const [generalDead, setGeneralDead] = useState(false);
-  const [BSBDead, setBSBDead] = useState(false);
-  const [detachmentsDead, setDetachmentsDead] = useState({});
-  const [victoryPoints, setVictoryPoints] = useState({});
   const list = useSelector((state) =>
     state.lists.find(({ id }) => listId === id)
   );
+  const battle = useSelector(selectActiveBattle);
+  const battleId = useSelector((state) => state.battle.activeBattleId);
+  const armyComposition = list ? (list.armyComposition || list.army) : null;
+  const vpData = battle?.victoryPoints || {};
+  const banners = vpData.banners ?? 0;
+  const scenarioPoints = vpData.scenarioPoints ?? 0;
+  const generalDead = vpData.generalDead ?? false;
+  const BSBDead = vpData.BSBDead ?? false;
+  const detachmentsDead = vpData.detachmentsDead ?? {};
+  const victoryPoints = vpData.units || {};
+  const opponentUnits = useSelector(selectOpponentUnits);
+  const [showAddOpponent, setShowAddOpponent] = useState(false);
+  const [newOpponent, setNewOpponent] = useState({
+    name: "", models: 5, wounds: 1, category: "core",
+  });
   const handleCustomNoteChange = ({ value, type, unitId }) => {
     dispatch(
       editUnit({
@@ -66,6 +84,50 @@ export const GameView = () => {
   const updateLocalSettings = (newSettings) => {
     localStorage.setItem("owb.settings", JSON.stringify(newSettings));
   };
+
+  const persistedBattle = useSelector((state) => state.battle);
+
+  useEffect(() => {
+    if (!list) return;
+    if (!persistedBattle.activeBattleId) {
+      dispatch(createBattle({ listId, name: list.name }));
+    }
+  }, [list]);
+
+  useEffect(() => {
+    if (!battle) return;
+    const battleUnits = Object.keys(battle.ownUnits);
+    if (battleUnits.length > 0) return;
+
+    const categories = [
+      "characters", "lords", "heroes", "core",
+      "special", "rare", "mercenaries", "allies",
+    ];
+    categories.forEach((category) => {
+      (list[category] || []).forEach((unit) => {
+        const stats = getStats(unit, armyComposition);
+        const woundsPerModel = stats?.[0]?.W
+          ? parseInt(stats[0].W, 10)
+          : 1;
+        dispatch(addUnitToBattle({
+          battleId: battle.id,
+          side: "own",
+          unit: {
+            unitListId: unit.id,
+            category,
+            label: getUnitName({ unit, language }),
+            name: getUnitName({ unit, language }),
+            strength: unit.strength || unit.minimum || 1,
+            woundsPerModel,
+          },
+        }));
+      });
+    });
+  }, [battle?.id]);
+
+  useEffect(() => {
+    localStorage.setItem("owb.battles", JSON.stringify(persistedBattle));
+  }, [persistedBattle]);
 
   if (!list) {
     return (
@@ -81,7 +143,6 @@ export const GameView = () => {
     );
   }
 
-  const armyComposition = list.armyComposition || list.army;
   const allPoints = getAllPoints(list);
   const charactersPoints = getPoints({ list, type: "characters" });
   const corePoints = getPoints({ list, type: "core" });
@@ -250,6 +311,42 @@ export const GameView = () => {
       },
     },
   ];
+  const getBattleUnit = (listUnitId) => {
+    if (!battle) return null;
+    return Object.values(battle.ownUnits).find(
+      (u) => u.unitListId === listUnitId
+    );
+  };
+
+  const getBattleUnitId = (listUnitId) => {
+    if (!battle) return null;
+    return Object.keys(battle.ownUnits).find(
+      (k) => battle.ownUnits[k].unitListId === listUnitId
+    );
+  };
+
+  const updateOpponentUnit = (unitId, changes) => {
+    if (!battle) return;
+    dispatch(updateBattleUnit({
+      battleId: battle.id, unitId, side: "opponent", changes,
+    }));
+  };
+
+  const handleAddOpponentUnit = () => {
+    if (!battle) return;
+    dispatch(addUnitToBattle({
+      battleId: battle.id, side: "opponent",
+      unit: {
+        name: newOpponent.name || "Enemy Unit",
+        strength: Number(newOpponent.models) || 5,
+        woundsPerModel: Number(newOpponent.wounds) || 1,
+        category: newOpponent.category,
+      },
+    }));
+    setNewOpponent({ name: "", models: 5, wounds: 1, category: "core" });
+    setShowAddOpponent(false);
+  };
+
   const getSection = ({ type }) => {
     const units = list[type];
 
@@ -406,6 +503,120 @@ export const GameView = () => {
                       />
                     </div>
                   )}
+                  {battle && (
+                    <div className="game-view__tracker">
+                      <p className="game-view__tracker-title">
+                        <FormattedMessage id="misc.battleTracker" />
+                      </p>
+                      <div className="game-view__tracker-row">
+                        <span className="game-view__tracker-label">
+                          <FormattedMessage id="misc.models" />:
+                        </span>
+                        <Button
+                          className="game-view__tracker-btn"
+                          type="tertiary"
+                          onClick={() => {
+                            const bu = getBattleUnit(unit.id);
+                            if (bu && bu.modelsRemaining > 0) {
+                              dispatch(updateBattleUnit({
+                                battleId: battle.id,
+                                unitId: getBattleUnitId(unit.id),
+                                side: "own",
+                                changes: { modelsRemaining: bu.modelsRemaining - 1 },
+                              }));
+                            }
+                          }}
+                        >–</Button>
+                        <span className="game-view__tracker-value">
+                          {(() => {
+                            const bu = getBattleUnit(unit.id);
+                            return bu ? `${bu.modelsRemaining}/${bu.modelsTotal}` : "–";
+                          })()}
+                        </span>
+                        <Button
+                          className="game-view__tracker-btn"
+                          type="tertiary"
+                          onClick={() => {
+                            const bu = getBattleUnit(unit.id);
+                            if (bu && bu.modelsRemaining < bu.modelsTotal) {
+                              dispatch(updateBattleUnit({
+                                battleId: battle.id,
+                                unitId: getBattleUnitId(unit.id),
+                                side: "own",
+                                changes: { modelsRemaining: bu.modelsRemaining + 1 },
+                              }));
+                            }
+                          }}
+                        >+</Button>
+                      </div>
+                      <div className="game-view__tracker-row">
+                        <span className="game-view__tracker-label">
+                          <FormattedMessage id="misc.wounds" />:
+                        </span>
+                        <Button
+                          className="game-view__tracker-btn"
+                          type="tertiary"
+                          onClick={() => {
+                            const bu = getBattleUnit(unit.id);
+                            if (bu && bu.woundsRemaining > 0) {
+                              dispatch(updateBattleUnit({
+                                battleId: battle.id,
+                                unitId: getBattleUnitId(unit.id),
+                                side: "own",
+                                changes: { woundsRemaining: bu.woundsRemaining - 1 },
+                              }));
+                            }
+                          }}
+                        >–</Button>
+                        <span className="game-view__tracker-value">
+                          {(() => {
+                            const bu = getBattleUnit(unit.id);
+                            return bu ? `${bu.woundsRemaining}/${bu.woundsTotal}` : "–";
+                          })()}
+                        </span>
+                        <Button
+                          className="game-view__tracker-btn"
+                          type="tertiary"
+                          onClick={() => {
+                            const bu = getBattleUnit(unit.id);
+                            if (bu && bu.woundsRemaining < bu.woundsTotal) {
+                              dispatch(updateBattleUnit({
+                                battleId: battle.id,
+                                unitId: getBattleUnitId(unit.id),
+                                side: "own",
+                                changes: { woundsRemaining: bu.woundsRemaining + 1 },
+                              }));
+                            }
+                          }}
+                        >+</Button>
+                      </div>
+                      <div className="game-view__tracker-row">
+                        {["active", "fleeing", "dead"].map((status) => {
+                          const bu = getBattleUnit(unit.id);
+                          return (
+                            <Button
+                              key={status}
+                              className="game-view__tracker-btn"
+                              type={bu?.status === status ? "secondary" : "tertiary"}
+                              onClick={() => {
+                                const id = getBattleUnitId(unit.id);
+                                if (id) {
+                                  dispatch(updateBattleUnit({
+                                    battleId: battle.id,
+                                    unitId: id,
+                                    side: "own",
+                                    changes: { status },
+                                  }));
+                                }
+                              }}
+                            >
+                              <FormattedMessage id={`misc.${status}`} />
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                   {showVictoryPoints && (
                     <div>
                       {getVictoryButtons(unit, type)}
@@ -428,69 +639,44 @@ export const GameView = () => {
       </ul>
     );
   };
-  const updateVictoryPoints = ({ unit, value, deadDetachments }) => {
-    let unitPoints = victoryPoints[unit.id] || {
+  const updateVp = ({ unit, value, deadDetachments }) => {
+    if (!battle || !battle.id) return;
+    const currentUnits = vpData.units || {};
+    let unitPoints = currentUnits[unit.id] || {
       dead: 0,
       fleeing: 0,
       25: 0,
       detachments: {},
     };
-    const isGeneral = Boolean(
-      unit?.command?.length &&
-        unit.command.find(
-          (command) => command.name_en === "General" && command.active
-        )
-    );
-    const isBSB = Boolean(
-      unit?.command?.length &&
-        unit.command.find(
-          (command) =>
-            command.name_en === "Battle Standard Bearer" && command.active
-        )
-    );
+    let newGeneralDead = generalDead;
+    let newBSBDead = BSBDead;
+    let unitDead, unitFleeing;
 
-    // eslint-disable-next-line default-case
     switch (value) {
       case "dead": {
-        unitPoints = {
-          ...unitPoints,
-          dead: unitPoints.dead
-            ? 0
-            : getUnitPoints(unit, {
-                noDetachments: true,
-                armyComposition,
-              }),
-          fleeing: 0,
-          25: 0,
-        };
-        if (isGeneral) {
-          setGeneralDead(Boolean(unitPoints.dead));
-        }
-        if (isBSB) {
-          setBSBDead(Boolean(unitPoints.dead));
-        }
+        unitDead = unitPoints.dead
+          ? 0
+          : getUnitPoints(unit, {
+              noDetachments: true,
+              armyComposition,
+            });
+        unitPoints = { ...unitPoints, dead: unitDead, fleeing: 0, 25: 0 };
+        if (unitPoints.isGeneral) newGeneralDead = Boolean(unitDead);
+        if (unitPoints.isBSB) newBSBDead = Boolean(unitDead);
         break;
       }
       case "fleeing": {
-        unitPoints = {
-          ...unitPoints,
-          dead: 0,
-          fleeing: unitPoints.fleeing
-            ? 0
-            : Math.round(
-                getUnitPoints(unit, {
-                  noDetachments: true,
-                  armyComposition,
-                }) / 2
-              ),
-          25: 0,
-        };
-        if (isGeneral) {
-          setGeneralDead(Boolean(unitPoints.fleeing));
-        }
-        if (isBSB) {
-          setBSBDead(Boolean(unitPoints.fleeing));
-        }
+        unitFleeing = unitPoints.fleeing
+          ? 0
+          : Math.round(
+              getUnitPoints(unit, {
+                noDetachments: true,
+                armyComposition,
+              }) / 2
+            );
+        unitPoints = { ...unitPoints, dead: 0, fleeing: unitFleeing, 25: 0 };
+        if (unitPoints.isGeneral) newGeneralDead = Boolean(unitFleeing);
+        if (unitPoints.isBSB) newBSBDead = Boolean(unitFleeing);
         break;
       }
       case "25": {
@@ -518,10 +704,7 @@ export const GameView = () => {
               [detachment.id]:
                 deadDetachments *
                 getUnitPoints(
-                  {
-                    ...detachment,
-                    strength: 1,
-                  },
+                  { ...detachment, strength: 1 },
                   { armyComposition }
                 ),
             },
@@ -530,10 +713,17 @@ export const GameView = () => {
       }
     }
 
-    setVictoryPoints({
-      ...victoryPoints,
-      [unit.id]: { ...unitPoints, isGeneral, isBSB },
-    });
+    dispatch(updateVictoryPoints({
+      battleId: battle.id,
+      vp: {
+        units: {
+          ...currentUnits,
+          [unit.id]: { ...unitPoints, isGeneral: unitPoints.isGeneral ?? false, isBSB: unitPoints.isBSB ?? false },
+        },
+        generalDead: newGeneralDead,
+        BSBDead: newBSBDead,
+      },
+    }));
   };
 
   const getVictoryButtons = (unit, type) => {
@@ -543,7 +733,7 @@ export const GameView = () => {
           className="game-view__victory-button"
           type={victoryPoints[unit.id]?.dead ? "secondary" : "tertiary"}
           spaceTop
-          onClick={() => updateVictoryPoints({ unit, value: "dead" })}
+          onClick={() => updateVp({ unit, value: "dead" })}
         >
           <FormattedMessage id="misc.dead" />
         </Button>
@@ -551,7 +741,7 @@ export const GameView = () => {
           className="game-view__victory-button"
           type={victoryPoints[unit.id]?.fleeing ? "secondary" : "tertiary"}
           spaceTop
-          onClick={() => updateVictoryPoints({ unit, value: "fleeing" })}
+          onClick={() => updateVp({ unit, value: "fleeing" })}
         >
           <FormattedMessage id="misc.fleeing" />
         </Button>
@@ -559,7 +749,7 @@ export const GameView = () => {
           className="game-view__victory-button"
           type={victoryPoints[unit.id]?.["25"] ? "secondary" : "tertiary"}
           spaceTop
-          onClick={() => updateVictoryPoints({ unit, value: "25" })}
+          onClick={() => updateVp({ unit, value: "25" })}
         >
           {"<25%"}
         </Button>
@@ -579,11 +769,18 @@ export const GameView = () => {
                 max={detachment.strength}
                 value={detachmentsDead[detachment.id] || 0}
                 onChange={(event) => {
-                  setDetachmentsDead({
-                    ...detachmentsDead,
-                    [detachment.id]: event.target.value,
-                  });
-                  updateVictoryPoints({
+                  if (battle) {
+                    dispatch(updateVictoryPoints({
+                      battleId: battle.id,
+                      vp: {
+                        detachmentsDead: {
+                          ...detachmentsDead,
+                          [detachment.id]: event.target.value,
+                        },
+                      },
+                    }));
+                  }
+                  updateVp({
                     unit,
                     value: "detachment",
                     deadDetachments: event.target.value,
@@ -616,6 +813,29 @@ export const GameView = () => {
       />
 
       <Main className="game-view">
+        {battle && (
+          <section className="game-view__battle-bar">
+            <span className="game-view__turn">
+              <FormattedMessage id="misc.turn" /> {battle.turn}
+            </span>
+            <div className="game-view__phases">
+              {["strategy", "movement", "shooting", "combat"].map((p) => (
+                <span
+                  key={p}
+                  className={`game-view__phase${battle.phase === p ? " game-view__phase--active" : ""}`}
+                >
+                  <FormattedMessage id={`phase.${p}`} />
+                </span>
+              ))}
+            </div>
+            <Button
+              type="primary"
+              onClick={() => dispatch(advancePhase({ battleId: battle.id }))}
+            >
+              <FormattedMessage id="misc.advancePhase" />
+            </Button>
+          </section>
+        )}
         {list.characters.length > 0 && (
           <section className="game-view__section">
             <header className="editor__header">
@@ -712,6 +932,142 @@ export const GameView = () => {
           </section>
         )}
 
+        {battle && (
+          <section className="game-view__section game-view__opponent-section">
+            <header className="editor__header">
+              <h2>
+                <FormattedMessage id="misc.opponent" />
+              </h2>
+              <Button
+                type="tertiary"
+                onClick={() => setShowAddOpponent(!showAddOpponent)}
+              >
+                {showAddOpponent ? "–" : "+"}
+              </Button>
+            </header>
+            {showAddOpponent && (
+              <div className="game-view__add-opponent">
+                <div className="game-view__add-opponent-form">
+                  <input
+                    className="input"
+                    placeholder="Unit name"
+                    value={newOpponent.name}
+                    onChange={(e) => setNewOpponent({ ...newOpponent, name: e.target.value })}
+                  />
+                  <NumberInput
+                    min={1}
+                    value={newOpponent.models}
+                    onChange={(e) => setNewOpponent({ ...newOpponent, models: e.target.value })}
+                  />
+                  <NumberInput
+                    min={1}
+                    value={newOpponent.wounds}
+                    onChange={(e) => setNewOpponent({ ...newOpponent, wounds: e.target.value })}
+                  />
+                  <select
+                    className="input"
+                    value={newOpponent.category}
+                    onChange={(e) => setNewOpponent({ ...newOpponent, category: e.target.value })}
+                  >
+                    <option value="core">Core</option>
+                    <option value="special">Special</option>
+                    <option value="rare">Rare</option>
+                    <option value="characters">Characters</option>
+                  </select>
+                </div>
+                <div className="game-view__add-opponent-actions">
+                  <Button type="primary" onClick={handleAddOpponentUnit}>
+                    <FormattedMessage id="misc.add" />
+                  </Button>
+                  <Button type="tertiary" onClick={() => setShowAddOpponent(false)}>
+                    <FormattedMessage id="misc.cancel" />
+                  </Button>
+                </div>
+              </div>
+            )}
+            {opponentUnits.length === 0 && (
+              <p className="game-view__empty">
+                <FormattedMessage id="misc.noOpponentUnits" />
+              </p>
+            )}
+            <ul>
+              {opponentUnits.map((unit) => (
+                <li key={unit.unitListId} className="list">
+                  <div className="list__inner game-view__list-inner">
+                    <h3>
+                      <span className="game-view__name">{unit.label}</span>
+                      <span className="game-view__points">
+                        [{unit.category}] {unit.modelsRemaining}/{unit.modelsTotal}
+                      </span>
+                    </h3>
+                    <div className="game-view__details">
+                      <div className="game-view__tracker">
+                        <p className="game-view__tracker-title">
+                          <FormattedMessage id="misc.battleTracker" />
+                        </p>
+                        <div className="game-view__tracker-row">
+                          <span className="game-view__tracker-label">
+                            <FormattedMessage id="misc.models" />:
+                          </span>
+                          <Button
+                            className="game-view__tracker-btn"
+                            type="tertiary"
+                            onClick={() => unit.modelsRemaining > 0 && updateOpponentUnit(unit.unitListId, { modelsRemaining: unit.modelsRemaining - 1 })}
+                          >–</Button>
+                          <span className="game-view__tracker-value">
+                            {unit.modelsRemaining}/{unit.modelsTotal}
+                          </span>
+                          <Button
+                            className="game-view__tracker-btn"
+                            type="tertiary"
+                            onClick={() => unit.modelsRemaining < unit.modelsTotal && updateOpponentUnit(unit.unitListId, { modelsRemaining: unit.modelsRemaining + 1 })}
+                          >+</Button>
+                        </div>
+                        <div className="game-view__tracker-row">
+                          <span className="game-view__tracker-label">
+                            <FormattedMessage id="misc.wounds" />:
+                          </span>
+                          <Button
+                            className="game-view__tracker-btn"
+                            type="tertiary"
+                            onClick={() => unit.woundsRemaining > 0 && updateOpponentUnit(unit.unitListId, { woundsRemaining: unit.woundsRemaining - 1 })}
+                          >–</Button>
+                          <span className="game-view__tracker-value">
+                            {unit.woundsRemaining}/{unit.woundsTotal}
+                          </span>
+                          <Button
+                            className="game-view__tracker-btn"
+                            type="tertiary"
+                            onClick={() => unit.woundsRemaining < unit.woundsTotal && updateOpponentUnit(unit.unitListId, { woundsRemaining: unit.woundsRemaining + 1 })}
+                          >+</Button>
+                        </div>
+                        <div className="game-view__tracker-row">
+                          {["active", "fleeing", "dead"].map((status) => (
+                            <Button
+                              key={status}
+                              className="game-view__tracker-btn"
+                              type={unit.status === status ? "secondary" : "tertiary"}
+                              onClick={() => updateOpponentUnit(unit.unitListId, { status })}
+                            >
+                              <FormattedMessage id={`misc.${status}`} />
+                            </Button>
+                          ))}
+                          <Button
+                            type="tertiary"
+                            onClick={() => updateOpponentUnit(unit.unitListId, { status: "dead", modelsRemaining: 0 })}
+                          >
+                            ✕
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {showVictoryPoints && (
           <section className="game-view__section">
             <header className="editor__header">
@@ -732,7 +1088,12 @@ export const GameView = () => {
                 min={0}
                 value={banners}
                 onChange={(event) => {
-                  setBanners(event.target.value);
+                  if (battle) {
+                    dispatch(updateVictoryPoints({
+                      battleId: battle.id,
+                      vp: { banners: Number(event.target.value) },
+                    }));
+                  }
                 }}
               />
               <label htmlFor="scenarioPoints">
@@ -743,7 +1104,12 @@ export const GameView = () => {
                 min={0}
                 value={scenarioPoints}
                 onChange={(event) => {
-                  setScenarioPoints(event.target.value);
+                  if (battle) {
+                    dispatch(updateVictoryPoints({
+                      battleId: battle.id,
+                      vp: { scenarioPoints: Number(event.target.value) },
+                    }));
+                  }
                 }}
               />
               {generalDead && (

@@ -2,6 +2,57 @@
 
 The dataset for each army is defined in a [JSON](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON) format.
 
+## Rules Knowledge Base (KB)
+
+La base de conocimiento de reglas vive en `public/games/the-old-world/rules/`. Archivos JSON indexados por ID que definen efectos, perfiles y objetos del juego. Sigue la postura legal definida en ADR-002: sin texto literal de GW, lenguaje parafraseado propio.
+
+### Estructura de archivos
+
+| Archivo | Contenido |
+|---------|-----------|
+| `special-rules.json` | Mapa de ID de regla → nombre, efecto, categoría, fase, fuente |
+| `weapons.json` | Perfiles de armas (rango, fuerza, reglas especiales, tipo) |
+| `armor.json` | Tipos de armadura (salvación, bonos, reglas especiales) |
+| `magic-items.json` | Objetos mágicos (categoría, puntos, efecto, uso único) |
+
+### Formato de entrada (special-rules.json)
+
+```javascript
+{
+  "rule-id": {
+    "name": { "en": "English name", "es": "Nombre español" },
+    "category": "combat | morale | defense",
+    "phase": "combat | movement | shooting | any | both",
+    "effect": {
+      "en": "Paraphrased description of the rule effect.",
+      "es": "Descripción parafraseada del efecto de la regla."
+    },
+    "source": "Reference to the official free PDF."
+  }
+}
+```
+
+### Formato de entrada (weapons.json)
+
+```javascript
+{
+  "weapon-id": {
+    "name": { "en": "Name", "es": "Nombre" },
+    "range": Number,
+    "strength": "user | +N | Number",
+    "specialRules": ["rule-id", ...],
+    "type": "melee | ranged"
+  }
+}
+```
+
+### Contribuir nuevas reglas
+
+1. Crear una entrada en el archivo JSON correspondiente con ID único (kebab-case)
+2. La descripción debe ser parafraseada, no copia literal del texto de GW
+3. Incluir `source` para trazabilidad
+4. Mantener el mismo formato multidioma que los datasets
+
 Datasets can be downloaded on the [Custom datasets](https://old-world-builder.com/custom-datasets) page.
 
 You can also use our [Datasets editor](https://old-world-builder.com/datasets), no coding required.

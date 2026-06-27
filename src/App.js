@@ -22,6 +22,7 @@ import { Changelog } from "./pages/changelog";
 import { Import } from "./pages/import";
 import { GameView } from "./pages/game-view";
 import { CustomDatasets } from "./pages/custom-datasets";
+import { setBattles } from "./state/battle";
 import { setLists } from "./state/lists";
 import { setSettings } from "./state/settings";
 import { Header, Main } from "./components/page";
@@ -37,7 +38,9 @@ export const App = () => {
   useEffect(() => {
     const localLists = localStorage.getItem("owb.lists");
     const localSettings = localStorage.getItem("owb.settings");
+    const localBattles = localStorage.getItem("owb.battles");
 
+    dispatch(setBattles(JSON.parse(localBattles)));
     dispatch(setLists(JSON.parse(localLists)));
     dispatch(setSettings(JSON.parse(localSettings)));
   }, [dispatch]);

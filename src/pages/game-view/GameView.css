@@ -88,3 +88,115 @@
 .input.game-view__custom-note-input {
   margin-bottom: 0;
 }
+
+.game-view__battle-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: 4px;
+  flex-wrap: wrap;
+}
+
+.game-view__turn {
+  font-weight: bold;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.game-view__phases {
+  display: flex;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.game-view__phase {
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.game-view__phase--active {
+  opacity: 1;
+  font-weight: bold;
+  background: var(--color-button-primary);
+  color: var(--color-button-primary-text);
+}
+
+.game-view__tracker {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.game-view__tracker-title {
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.game-view__tracker-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.game-view__tracker-label {
+  font-size: 0.85rem;
+  min-width: 3.5rem;
+}
+
+.game-view__tracker-value {
+  font-weight: bold;
+  min-width: 3rem;
+  text-align: center;
+}
+
+.game-view__tracker-btn {
+  min-width: 2rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.game-view__opponent-section {
+  border-left: 3px solid #c0392b;
+  padding-left: 0.5rem;
+}
+
+.game-view__add-opponent {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.game-view__add-opponent-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.game-view__add-opponent-form .input {
+  margin-bottom: 0;
+}
+
+.game-view__add-opponent-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.game-view__empty {
+  color: var(--color-text-secondary);
+  font-style: italic;
+  padding: 1rem;
+}

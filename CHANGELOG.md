@@ -14,6 +14,20 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ### Fixed
 ### Security
 
+## [1.27.0] - 2026-06-27
+
+### Added
+- B01: Modelo de datos "sesión de batalla" + persistencia (src/state/battle.js)
+- B02: Tracker de partida (heridas, bajas, estado, fases de turno en game-view)
+- B03: Victory Points persistentes (de useState a battle slice)
+- B04: Motor de dados determinista (src/utils/combat.js)
+- B05: Resolución de combate (heridas, filas, estandarte, flanco, test de ruptura)
+- B06: Calculadora de probabilidades (src/utils/probability.js)
+- B07: Soporte de ejército oponente (add, tracker, remove)
+- B08: Helper de carga/movimiento (src/utils/battle.js)
+- B09: Knowledge Base de reglas (special-rules, weapons, armor, magic-items)
+- docs/datasets.md: documentación del formato KB
+
 ## [1.26.0] - 2026-06-27
 
 ### Added

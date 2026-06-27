@@ -14,7 +14,7 @@ Gestionados por /version. La versión se actualiza al cerrar sesión.
 |---|---|---|
 | ROADMAP.md | — | 2026-06-27 |
 | CHECKLIST.md | — | 2026-06-27 |
-| CHANGELOG.md | 1.25.0 | 2026-06-27 |
+| CHANGELOG.md | 1.26.0 | 2026-06-27 |
 | DILIGENCIA.md | v1.20.0 | 2026-06-27 |
 
 ## Guías
@@ -63,7 +63,7 @@ Documentos de referencia rápida, estándares o plantillas.
 
 | Archivo | Versión | Última actualización |
 |---|---|---|
-| `docs/datasets.md` | — | — |
+| `docs/datasets.md` | — | 2026-06-27 |
 | `doc/qa/UX-CHECKLIST.md` | — | 2026-06-23 |
 | `doc/mutaciones.md` | — | 2026-06-23 |
 | `doc/arch/ADR_SUMMARY.md` | — | 2026-06-27 |

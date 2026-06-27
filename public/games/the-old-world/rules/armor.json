@@ -1,0 +1,24 @@
+{
+  "light-armour": {
+    "save": 6,
+    "name": { "en": "Light armour", "es": "Armadura ligera", "fr": "Armure légère" }
+  },
+  "heavy-armour": {
+    "save": 5,
+    "name": { "en": "Heavy armour", "es": "Armadura pesada", "fr": "Armure lourde" }
+  },
+  "full-plate-armour": {
+    "save": 4,
+    "name": { "en": "Full plate armour", "es": "Armadura completa", "fr": "Armure de plate complète" }
+  },
+  "shield": {
+    "save": -1,
+    "saveType": "bonus",
+    "name": { "en": "Shield", "es": "Escudo", "fr": "Bouclier" }
+  },
+  "sea-dragon-cloak": {
+    "save": 5,
+    "specialRule": "ward-save-against-flaming",
+    "name": { "en": "Sea Dragon Cloak", "es": "Capa de dragón marino", "fr": "Cape en peau de Dragon des Mers" }
+  }
+}
